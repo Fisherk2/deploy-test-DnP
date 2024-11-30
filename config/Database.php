@@ -7,6 +7,10 @@ https://www.w3schools.com/php/php_mysql_intro.asp
 
 declare(strict_types=1);
 
+// CONSTANTES DE CONEXION
+define('DB_HOST', 'localhost');
+define('DB_NAME', 'DreamsAndPrints');
+
 class DnPdatabase {
     private $host;
     private $database;
