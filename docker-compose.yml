@@ -1,0 +1,40 @@
+version: "3.8" # Versión de Docker Compose
+
+services:
+  web:
+    build: .
+    container_name: php-app # Nombre del contenedor
+    ports:
+      - "8080:80" # Expón el puerto 80 del contenedor en el puerto 8080 del host (Apache)
+    networks:
+      - app-network # Conecta el contenedor web a la red de la aplicación
+    environment:
+      - DB_HOST=mariadb # Nombre del servicio de la base de datos
+      - DB_NAME=DreamsAndPrints # Nombre de la base de datos
+      - DB_USER=admin_DnP # Nombre de usuario de la base de datos
+      - DB_PASS=8md!M6s*7%aCDqoY # Contraseña de la base de datos
+    depends_on:
+      - mariadb # El contenedor web depende del contenedor mariadb
+
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb
+    ports:
+      - "3307:3306" # Expón el puerto 3306 del contenedor en el puerto 3307 del host (MySQL)
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: DreamsAndPrints # Nombre de la base de datos
+      MYSQL_USER: admin_DnP
+      MYSQL_PASSWORD: 8md!M6s*7%aCDqoY # Contraseña de la base de datos
+    volumes:
+      - mariadb-data:/var/lib/mysql # Monta el volumen para persistir los datos de la base de datos
+      - ./config/mariadb_custom.cnf:/etc/mysql/conf.d/mariadb_custom.cnf:ro # Monta el archivo de configuración personalizado
+    networks:
+      - app-network # Usa la red de la aplicación
+
+networks:
+  app-network:
+    driver: bridge # Utiliza el controlador de red bridge para la red de la aplicación
+volumes:
+  mariadb-data:
+    driver: local # Utiliza el controlador de volumen local para persistir los datos
